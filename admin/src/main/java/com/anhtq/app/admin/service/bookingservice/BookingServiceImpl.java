@@ -6,6 +6,7 @@ import com.anhtq.app.admin.controller.booking.servicerequest.UpdateStatusRequest
 import com.anhtq.app.admin.controller.booking.serviceresponse.CreateBookingGetServiceResponse;
 import com.anhtq.app.admin.controller.booking.serviceresponse.GetBookingDetailServiceResponse;
 import com.anhtq.app.admin.controller.booking.serviceresponse.GetBookingServiceResponse;
+import com.anhtq.app.admin.controller.booking.serviceresponse.GetMyBookingServiceResponse;
 import com.anhtq.app.admin.doamin.*;
 import com.anhtq.app.admin.excetion.ApiException;
 import com.anhtq.app.admin.repository.*;
@@ -338,35 +339,36 @@ public class BookingServiceImpl implements BookingService {
   }
 
   @Override
-  public List<GetBookingDetailServiceResponse> getBookingByUserId(Long userId) {
+  public List<GetMyBookingServiceResponse> getBookingByUserId(Long userId) {
     StringBuilder sql =
         new StringBuilder("SELECT new com.anhtq.app.admin.controller.booking.serviceresponse.");
     sql.append(
-        "GetBookingDetailServiceResponse(entity.id, entity.userType, customer.lastName, "
-            + "user.lastName, service.name, entity.status, entity.bookingDate, discount.code, "
-            + "entityDetail.cost, entityDetail.promotionalPrice, customer.firstName, user.firstName, customer.phoneNumber, user.phoneNumber) ");
+        "GetMyBookingServiceResponse(entity.id, service.image, service.name, "
+            + "service.sortDescription, entity.status, entity.bookingDate, discount.code, "
+            + "entityDetail.cost, entityDetail.promotionalPrice) ");
     sql.append(" FROM BookingEntity AS entity INNER JOIN BookingDetailEntity AS entityDetail ");
     sql.append(SPACE).append("ON entity.id = entityDetail.bookingId");
     sql.append(SPACE)
         .append("INNER JOIN ServiceEntity AS service ON service.id = entity.serviceId ");
-    sql.append(SPACE).append("LEFT JOIN UserEntity AS user ON user.id = entity.userId ");
+    sql.append(SPACE).append("INNER JOIN UserEntity AS user ON user.id = entity.userId ");
     sql.append(SPACE)
         .append("LEFT JOIN CustomerEntity AS customer ON customer.id = entity.customerId");
     sql.append(SPACE)
         .append("LEFT JOIN DiscountEntity AS discount ON discount.id = entityDetail.discountId ");
-    sql.append(SPACE).append("WHERE entity.userId = :id");
+    sql.append(SPACE).append("WHERE user.id = :id");
+    sql.append(SPACE).append("ORDER BY entity.bookingDate DESC");
     Query query = entityManager.createQuery(sql.toString());
     query.setParameter("id", userId);
+    List<GetMyBookingServiceResponse> list = query.getResultList();
 
-    List<GetBookingDetailServiceResponse> results = query.getResultList();
-    return results.stream()
+    return list.stream()
         .map(
             e ->
-                GetBookingDetailServiceResponse.builder()
+                GetMyBookingServiceResponse.builder()
                     .id(e.getId())
-                    .userType(e.getUserType())
-                    .customerLastName(e.getCustomerLastName())
-                    .userLastName(e.getUserLastName())
+                    .serviceImg(e.getServiceImg())
+                    .serviceName(e.getServiceName())
+                    .sortDescription(e.getSortDescription())
                     .serviceName(e.getServiceName())
                     .status(e.getStatus())
                     .bookingDate(e.getBookingDate())
@@ -374,10 +376,6 @@ public class BookingServiceImpl implements BookingService {
                     .discountName(e.getDiscountName())
                     .cost(e.getCost())
                     .promotionalPrice(e.getPromotionalPrice())
-                    .customerFirstName(e.getCustomerFirstName())
-                    .userFirstName(e.getUserFirstName())
-                    .customerPhoneNumber(e.getCustomerPhoneNumber())
-                    .userPhoneNumber(e.getUserPhoneNumber())
                     .build())
         .toList();
   }

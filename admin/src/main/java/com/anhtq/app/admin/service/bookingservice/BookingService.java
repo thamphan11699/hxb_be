@@ -6,6 +6,7 @@ import com.anhtq.app.admin.controller.booking.servicerequest.UpdateStatusRequest
 import com.anhtq.app.admin.controller.booking.serviceresponse.CreateBookingGetServiceResponse;
 import com.anhtq.app.admin.controller.booking.serviceresponse.GetBookingDetailServiceResponse;
 import com.anhtq.app.admin.controller.booking.serviceresponse.GetBookingServiceResponse;
+import com.anhtq.app.admin.controller.booking.serviceresponse.GetMyBookingServiceResponse;
 
 import java.util.List;
 
@@ -21,5 +22,5 @@ public interface BookingService {
 
   void updateStatus(UpdateStatusRequest request, Long id);
 
-  List<GetBookingDetailServiceResponse> getBookingByUserId(Long userId);
+  List<GetMyBookingServiceResponse> getBookingByUserId(Long userId);
 }

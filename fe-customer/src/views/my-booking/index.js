@@ -1,4 +1,5 @@
 import {
+  CBadge,
   CBreadcrumb,
   CBreadcrumbItem,
   CButton,
@@ -12,39 +13,56 @@ import {
 } from '@coreui/react'
 import moment from 'moment-timezone'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { httpGetRequest } from 'src/axiosHeper'
+import { httpGetRequest, httpPostRequest } from 'src/axiosHeper'
 import 'moment/locale/vi'
+import { useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 moment().tz()
 
-function Category() {
-  const navigate = useNavigate()
-  const [services, setServices] = useState([])
-  const [count, setCount] = useState(0)
-  useEffect(() => {
-    httpGetRequest('/customer/service')
-      .then(({ data }) => {
-        // console.log(data)
-        setServices(data.services)
-        setCount(data.count)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }, [])
+const renderStatus = (status) => {
+  switch (status) {
+    case '01':
+      return <CBadge color="success">Mới đặt</CBadge>
+    case '02':
+      return <CBadge color="success">Xác nhận</CBadge>
+    case '03':
+      return <CBadge color="danger">Hủy</CBadge>
+    default:
+      return <CBadge color="success">Hoàn thành</CBadge>
+  }
+}
 
-  const getMoreService = () => {
-    httpGetRequest('/customer/service', { start: services.length })
-      .then(({ data }) => {
-        // console.log(data)
-        setServices((pre) => {
-          return [...pre, ...data.services]
+function MyBooking() {
+  const [bookings, setMyBookings] = useState([])
+
+  const userId = useSelector((state) => state.user?.id)
+
+  useEffect(() => {
+    loadPage(userId)
+  }, [userId])
+
+  const loadPage = (id) => {
+    if (id) {
+      httpGetRequest('/private/booking/user/' + id)
+        .then(({ data }) => {
+          console.log(data)
+          setMyBookings(data)
         })
-        setCount(data.count)
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }
+
+  const onCancelBooking = (id) => {
+    httpPostRequest('/private/booking/update-status/' + id, { status: '03' })
+      .then(({ data }) => {
+        loadPage(userId)
+        toast.success('Hủy thành công')
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning('Có lỗi trong lúc hủy,')
       })
   }
 
@@ -53,20 +71,14 @@ function Category() {
       <CCard className="p-20" style={{ marginBottom: 40 }}>
         <CBreadcrumb style={{ '--cui-breadcrumb-divider': "'>'" }}>
           <CBreadcrumbItem href="#/home">Trang chủ</CBreadcrumbItem>
-          <CBreadcrumbItem active>Dịch vụ</CBreadcrumbItem>
+          <CBreadcrumbItem active>Lịch sử đặt lịch</CBreadcrumbItem>
         </CBreadcrumb>
         <hr />
-        <h4 className="main_color">DỊCH VỤ</h4>
+        <h4 className="main_color">LỊCH SỬ ĐẶT LỊCH</h4>
         <CRow xs={{ cols: 1 }} sm={{ cols: 1 }} md={{ cols: 1 }}>
-          {services.map((value, index) => (
+          {bookings.map((value, index) => (
             <CCol key={value.id} style={{ cursor: 'pointer' }}>
-              <CCard
-                className="mb-3"
-                style={{ height: '250px' }}
-                onClick={() => {
-                  navigate('/service/' + value.id)
-                }}
-              >
+              <CCard className="mb-3" style={{ height: '250px' }}>
                 <CRow className="g-0" style={{ height: '250px !important' }}>
                   <CCol md={3}>
                     <img
@@ -79,32 +91,42 @@ function Category() {
                         marginTop: 5,
                         marginLeft: 5,
                       }}
-                      src={value.image}
+                      src={value.serviceImg}
                     />
                   </CCol>
-                  <CCol md={9}>
-                    <CCardBody>
+                  <CCol md={9} style={{ position: 'relative' }}>
+                    <CCardBody style={{ padding: 2 }}>
                       <CCardTitle>{value.name}</CCardTitle>
                       <CCardText>{value.sortDescription}</CCardText>
                       <CCardText>
-                        Giá dự kiến:{' '}
-                        {value.price
-                          ? value.price.toLocaleString('it-IT', {
+                        Giá gốc:{' '}
+                        {value.cost
+                          ? value.cost.toLocaleString('it-IT', {
                               style: 'currency',
                               currency: 'VND',
                             })
                           : 'Liên hệ'}
                       </CCardText>
                       <CCardText>
-                        <small className="text-medium-emphasis">
-                          Cập nhật gần nhất:{' '}
-                          {moment(value.lastUpdated)
-                            .locale('vi')
-                            .local()
-                            .startOf('minute')
-                            .fromNow()}
-                        </small>
+                        Giá dự kiến:{' '}
+                        {value.promotionalPrice
+                          ? value.promotionalPrice.toLocaleString('it-IT', {
+                              style: 'currency',
+                              currency: 'VND',
+                            })
+                          : 'Liên hệ'}
                       </CCardText>
+                      <CCardText>Ngày đặt lịch: {value.bookingDateString}</CCardText>
+                      <CCardText>Trạng tháu: {renderStatus(value.status)}</CCardText>
+                      <CButton
+                        variant="outline"
+                        color="danger"
+                        style={{ position: 'absolute', right: 20, bottom: 15 }}
+                        disabled={'01' !== value.status}
+                        onClick={() => onCancelBooking(value.id)}
+                      >
+                        Hủy
+                      </CButton>
                     </CCardBody>
                   </CCol>
                 </CRow>
@@ -113,20 +135,8 @@ function Category() {
           ))}
         </CRow>
       </CCard>
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: 40, marginBottom: 40 }}>
-        {services.length < count && (
-          <CButton
-            color="danger"
-            variant="outline"
-            className="main_color"
-            onClick={() => getMoreService()}
-          >
-            Xem thêm
-          </CButton>
-        )}
-      </div>
     </CContainer>
   )
 }
 
-export default Category
+export default MyBooking

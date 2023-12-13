@@ -4,6 +4,7 @@ import com.anhtq.app.admin.controller.booking.servicerequest.GetBookingServiceRe
 import com.anhtq.app.admin.controller.booking.servicerequest.UpdateStatusRequest;
 import com.anhtq.app.admin.controller.booking.serviceresponse.GetBookingDetailServiceResponse;
 import com.anhtq.app.admin.controller.booking.serviceresponse.GetBookingServiceResponse;
+import com.anhtq.app.admin.controller.booking.serviceresponse.GetMyBookingServiceResponse;
 import com.anhtq.app.admin.service.bookingservice.BookingService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ public class PrivateBookingController {
   }
 
   @GetMapping("/user/{id}")
-  public List<GetBookingDetailServiceResponse> getBookingByUserId(@PathVariable("id") Long id) {
+  public List<GetMyBookingServiceResponse> getBookingByUserId(@PathVariable("id") Long id) {
     return bookingService.getBookingByUserId(id);
   }
 }

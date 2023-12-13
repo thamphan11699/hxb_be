@@ -86,6 +86,8 @@ function Booking() {
     setId(0)
     if (open) {
       setId(id)
+    } else {
+      loadPage(search)
     }
   }
 
@@ -102,20 +104,10 @@ function Booking() {
     }
   }
 
-  const handleCloseModal = () => {
-    setOpenCreateOrUpdate(false)
-    setId(0)
-    loadPage(search)
-  }
   return (
     <>
       {openCreateOrUpdate && (
-        <BoolingDetailModal
-          open={openCreateOrUpdate}
-          closeModal={handleOpenModal}
-          id={id}
-          refreshPage={handleCloseModal}
-        />
+        <BoolingDetailModal open={openCreateOrUpdate} closeModal={handleOpenModal} id={id} />
       )}
 
       <CRow>

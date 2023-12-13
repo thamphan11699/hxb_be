@@ -17,7 +17,7 @@ import {
 import { httpGetRequest, httpPostRequest } from 'src/axiosHeper'
 import { toast } from 'react-toastify'
 
-function BoolingDetailModal({ open, closeModal, id, refreshPage }) {
+function BoolingDetailModal({ open, closeModal, id }) {
   const [item, setItem] = useState({
     id: '',
     userType: '',
@@ -276,6 +276,5 @@ export default BoolingDetailModal
 BoolingDetailModal.propTypes = {
   open: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
-  refreshPage: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired,
 }
