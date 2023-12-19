@@ -23,6 +23,12 @@ public class AuthenticationController {
     return authenticationService.authenticate(request);
   }
 
+  @PostMapping("/authentication-customer")
+  public AuthenticationResponse authenticationCustomer(@RequestBody LogInServiceRequest request) {
+    log.info(request.toString());
+    return authenticationService.authenticateCustomer(request);
+  }
+
   @PostMapping("/register")
   @ResponseStatus(HttpStatus.CREATED)
   public AuthenticationResponse register(@RequestBody RegisterServiceRequest request) {

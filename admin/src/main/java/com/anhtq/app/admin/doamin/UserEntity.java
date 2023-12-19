@@ -3,6 +3,8 @@ package com.anhtq.app.admin.doamin;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Builder
@@ -38,4 +40,10 @@ public class UserEntity extends CommonEntity {
 
   @Column(name = "avatar")
   private String avatar;
+
+  @Column(name = "date_of_birth")
+  private LocalDateTime dateOfBirth;
+
+  @Column(name = "gender")
+  private String gender;
 }

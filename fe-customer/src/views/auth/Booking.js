@@ -36,7 +36,7 @@ function Booking({ open, handleCloseModal }) {
         })
       })
       .catch((err) => {
-        console.log(err.response.data)
+        toast.warning(err?.response?.data?.message)
       })
   }, [])
 
@@ -98,8 +98,7 @@ function Booking({ open, handleCloseModal }) {
           handleCloseModal()
         })
         .catch((err) => {
-          console.log(err.response.data)
-          toast.warn('Đặt lịch không thành công')
+          toast.warning(err?.response?.data?.message)
         })
     }
   }

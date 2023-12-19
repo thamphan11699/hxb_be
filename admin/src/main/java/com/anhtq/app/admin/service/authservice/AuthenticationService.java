@@ -8,6 +8,8 @@ public interface AuthenticationService {
 
   AuthenticationResponse authenticate(LogInServiceRequest request);
 
+  AuthenticationResponse authenticateCustomer(LogInServiceRequest request);
+
   AuthenticationResponse register(RegisterServiceRequest request);
 
   AuthenticationResponse getCurrentUser();

@@ -56,7 +56,7 @@ export default function EditUser() {
         })
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
   }, [id])
 
@@ -76,7 +76,7 @@ export default function EditUser() {
           })
         })
         .catch((err) => {
-          console.log(err)
+          toast.warning(err?.response?.data?.message)
         })
     }
   }
@@ -120,8 +120,7 @@ export default function EditUser() {
           navigate('/management/account')
         })
         .catch((err) => {
-          console.log(err)
-          toast.warn('Cập nhật khoản không thành công')
+          toast.warning(err?.response?.data?.message)
         })
     }
   }

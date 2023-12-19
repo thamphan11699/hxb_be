@@ -62,7 +62,7 @@ public class ServiceServiceImpl implements ServiceService {
         .ifPresent(
             e -> {
               throw new ApiException(
-                  "Name " + e.getName() + " already exits!", HttpStatus.CONFLICT);
+                  "Tên dịch vụ " + e.getName() + " đã tồn tại.", HttpStatus.CONFLICT);
             });
 
     ServiceEntity entity =
@@ -141,7 +141,7 @@ public class ServiceServiceImpl implements ServiceService {
     ServiceEntity entity =
         serviceRepository
             .findById(id)
-            .orElseThrow(() -> new ApiException("Service not found.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException("Không tìm thấy dịch vụ.", HttpStatus.NOT_FOUND));
 
     entity.setDeleteFlg(Boolean.TRUE);
 
@@ -153,7 +153,7 @@ public class ServiceServiceImpl implements ServiceService {
     ServiceEntity entity =
         serviceRepository
             .findById(id)
-            .orElseThrow(() -> new ApiException("Service not found.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException("Không tìm thấy dịch vụ.", HttpStatus.NOT_FOUND));
 
     List<CategoriesEntity> categoriesEntities = categoriesRepository.findAll();
     return EditServiceGetServiceResponse.builder()
@@ -184,7 +184,7 @@ public class ServiceServiceImpl implements ServiceService {
     ServiceEntity entity =
         serviceRepository
             .findById(id)
-            .orElseThrow(() -> new ApiException("Service not found.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException("Không tìm thấy dịch vụ.", HttpStatus.NOT_FOUND));
 
     entity.setName(request.getName());
     entity.setSortDescription(request.getSortDescription());

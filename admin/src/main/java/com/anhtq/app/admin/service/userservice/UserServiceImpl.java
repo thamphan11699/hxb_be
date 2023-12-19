@@ -67,12 +67,14 @@ public class UserServiceImpl implements UserService {
         .findByEmail(request.getEmail())
         .ifPresent(
             e -> {
-              throw new ApiException(
-                  "Email " + e.getEmail() + " already exits!", HttpStatus.CONFLICT);
+              throw new ApiException("Email " + e.getEmail() + " đã tồn tại.", HttpStatus.CONFLICT);
             });
     roleRepository
         .findById(request.getRoleId())
-        .orElseThrow(() -> new ApiException("Can not get ROLE", HttpStatus.NOT_FOUND));
+        .orElseThrow(
+            () ->
+                new ApiException(
+                    "Không tìm thấy role với id: " + request.getRoleId(), HttpStatus.NOT_FOUND));
 
     UserEntity user =
         UserEntity.builder()
@@ -157,7 +159,7 @@ public class UserServiceImpl implements UserService {
     UserEntity user =
         userRepository
             .findById(id)
-            .orElseThrow(() -> new ApiException("User not found.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException("Không tìm thấy tài khoản.", HttpStatus.NOT_FOUND));
 
     user.setStatus("03");
     userRepository.save(user);
@@ -169,12 +171,12 @@ public class UserServiceImpl implements UserService {
     UserEntity user =
         userRepository
             .findById(id)
-            .orElseThrow(() -> new ApiException("User not found.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException("Không tìm thấy tài khoản.", HttpStatus.NOT_FOUND));
 
     List<RoleEntity> role = roleRepository.findByUserId(id);
 
     if (CollectionUtils.isEmpty(role)) {
-      throw new ApiException("Role not found.", HttpStatus.FORBIDDEN);
+      throw new ApiException("Không tìm thấy quyền.", HttpStatus.FORBIDDEN);
     }
 
     return EditUserGetServiceResponse.builder()
@@ -201,12 +203,12 @@ public class UserServiceImpl implements UserService {
     UserEntity user =
         userRepository
             .findByEmail(email)
-            .orElseThrow(() -> new ApiException("User not found.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException("Không tìm thấy tài khoản.", HttpStatus.NOT_FOUND));
 
     List<RoleEntity> role = roleRepository.findByUserId(user.getId());
 
     if (CollectionUtils.isEmpty(role)) {
-      throw new ApiException("Role not found.", HttpStatus.FORBIDDEN);
+      throw new ApiException("Không tìm thấy quyền.", HttpStatus.FORBIDDEN);
     }
 
     return EditUserGetServiceResponse.builder()
@@ -230,11 +232,11 @@ public class UserServiceImpl implements UserService {
     UserEntity user =
         userRepository
             .findById(id)
-            .orElseThrow(() -> new ApiException("User not found.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException("Không tìm thấy tài khoản.", HttpStatus.NOT_FOUND));
 
     roleRepository
         .findById(request.getRoleId())
-        .orElseThrow(() -> new ApiException("Role not found.", HttpStatus.FORBIDDEN));
+        .orElseThrow(() -> new ApiException("Không tìm thấy quyền.", HttpStatus.FORBIDDEN));
 
     List<UserRoleEntity> userRoles = userRoleRepository.findByUserId(id);
 

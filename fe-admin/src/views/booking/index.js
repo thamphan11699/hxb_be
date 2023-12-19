@@ -23,6 +23,7 @@ import { httpGetRequestNoHeader } from 'src/axiosHeper'
 import { cilPen, cilSearch } from '@coreui/icons'
 import ReactPaginate from 'react-paginate'
 import BoolingDetailModal from './BoolingDetailModal'
+import { toast } from 'react-toastify'
 
 function Booking() {
   const [items, setItems] = useState([])
@@ -62,7 +63,7 @@ function Booking() {
         setItems(data.items)
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
   }
 

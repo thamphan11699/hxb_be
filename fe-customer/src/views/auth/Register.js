@@ -31,6 +31,8 @@ function Register({ open, handleCloseModal }) {
     phoneNumber: '',
     roleIds: [3],
     image: '',
+    gender: '0',
+    dateOfBirth: 0,
   })
 
   const [validated, setValidated] = useState(false)
@@ -76,8 +78,7 @@ function Register({ open, handleCloseModal }) {
           handleCloseModal()
         })
         .catch((err) => {
-          console.log(err)
-          toast.warn('Đăng ký không thành công')
+          toast.warning(err?.response?.data?.message)
         })
     }
   }
@@ -98,7 +99,7 @@ function Register({ open, handleCloseModal }) {
           })
         })
         .catch((err) => {
-          console.log(err)
+          toast.warning(err?.response?.data?.message)
         })
     }
   }

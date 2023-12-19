@@ -50,7 +50,7 @@ function MyBooking() {
           setMyBookings(data)
         })
         .catch((err) => {
-          console.log(err)
+          toast.warning(err?.response?.data?.message)
         })
     }
   }
@@ -62,7 +62,7 @@ function MyBooking() {
         toast.success('Hủy thành công')
       })
       .catch((err) => {
-        toast.warning('Có lỗi trong lúc hủy,')
+        toast.warning(err?.response?.data?.message)
       })
   }
 

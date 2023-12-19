@@ -38,7 +38,7 @@ function CreateOrEditDiscountModal({ open, closeModal, id, refreshPage }) {
           setItem(data)
         })
         .catch((err) => {
-          toast.error('Có lỗi')
+          toast.warning(err?.response?.data?.message)
         })
     }
   }, [id])
@@ -108,8 +108,7 @@ function CreateOrEditDiscountModal({ open, closeModal, id, refreshPage }) {
             })
           })
           .catch((err) => {
-            console.log(err)
-            toast.warn('Sửa khuyến mãi không thành công')
+            toast.warning(err?.response?.data?.message)
           })
       } else {
         httpPostRequest('/discount/create', submit)
@@ -128,8 +127,7 @@ function CreateOrEditDiscountModal({ open, closeModal, id, refreshPage }) {
             })
           })
           .catch((err) => {
-            console.log(err)
-            toast.warn('Thêm khuyến mãi không thành công')
+            toast.warning(err?.response?.data?.message)
           })
       }
     }

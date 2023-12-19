@@ -1,6 +1,7 @@
 import { CBreadcrumb, CBreadcrumbItem, CCallout, CCard, CContainer } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { httpGetRequest } from 'src/axiosHeper'
 
 function SerivceDetail() {
@@ -19,7 +20,7 @@ function SerivceDetail() {
         setService(data)
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
   }, [id])
 

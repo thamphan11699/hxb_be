@@ -46,7 +46,7 @@ function Login({ open, handleCloseModal }) {
       event.stopPropagation()
       setValidated(true)
     } else {
-      httpPostRequest('/auth/authentication', item)
+      httpPostRequest('/auth/authentication-customer', item)
         .then(({ data }) => {
           toast.success('Đăng nhập thành công')
           setItem({
@@ -58,8 +58,7 @@ function Login({ open, handleCloseModal }) {
           handleCloseModal()
         })
         .catch((err) => {
-          console.log(err)
-          toast.warn('Đăng nhập không thành công')
+          toast.warning(err?.response?.data?.message)
         })
     }
   }

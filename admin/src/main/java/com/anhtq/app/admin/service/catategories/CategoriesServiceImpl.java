@@ -44,7 +44,7 @@ public class CategoriesServiceImpl implements CategoriesService {
         .ifPresent(
             e -> {
               throw new ApiException(
-                  "Name " + e.getName() + " already exits!", HttpStatus.CONFLICT);
+                  "Tên danh mục " + e.getName() + " đã tồn tại.", HttpStatus.CONFLICT);
             });
 
     CategoriesEntity categoriesEntity =
@@ -115,7 +115,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     CategoriesEntity entity =
         categoriesRepository
             .findById(id)
-            .orElseThrow(() -> new ApiException("Category not found.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException("Không tìm thấy danh mục.", HttpStatus.NOT_FOUND));
 
     entity.setDeleteFlg(Boolean.TRUE);
 
@@ -127,7 +127,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     CategoriesEntity entity =
         categoriesRepository
             .findById(id)
-            .orElseThrow(() -> new ApiException("Category not found.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException("Không tìm thấy danh mục.", HttpStatus.NOT_FOUND));
     return EditCategoryGetServiceResponse.builder()
         .id(entity.getId())
         .name(entity.getName())
@@ -142,7 +142,7 @@ public class CategoriesServiceImpl implements CategoriesService {
     CategoriesEntity entity =
         categoriesRepository
             .findById(id)
-            .orElseThrow(() -> new ApiException("Category not found.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException("Không tìm thấy danh mục.", HttpStatus.NOT_FOUND));
 
     if (Objects.equals(entity.getName(), request.getName())
         && Objects.equals(entity.getIsHome(), request.getIsHome())) {
@@ -151,7 +151,7 @@ public class CategoriesServiceImpl implements CategoriesService {
           .ifPresent(
               e -> {
                 throw new ApiException(
-                    "Name " + e.getName() + " already exits!", HttpStatus.CONFLICT);
+                    "Tên danh mục " + e.getName() + " đã tồn tại.", HttpStatus.CONFLICT);
               });
     }
 

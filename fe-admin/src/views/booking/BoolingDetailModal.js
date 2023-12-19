@@ -43,7 +43,7 @@ function BoolingDetailModal({ open, closeModal, id }) {
           setItem(data)
         })
         .catch((err) => {
-          toast.error('Có lỗi')
+          toast.warning(err?.response?.data?.message)
         })
     }
   }, [id])
@@ -77,7 +77,7 @@ function BoolingDetailModal({ open, closeModal, id }) {
         toast.success('Cập nhật trạng thái thành công.')
       })
       .catch((err) => {
-        toast.error('Cập nhật tráng thái thất bại.')
+        toast.warning(err?.response?.data?.message)
       })
   }
 

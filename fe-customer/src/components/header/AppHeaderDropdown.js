@@ -53,8 +53,8 @@ const AppHeaderDropdown = ({ user }) => {
             Lịch đã đặt
           </CDropdownItem>
           <CDropdownHeader className="bg-light fw-semibold py-2">Settings</CDropdownHeader>
-          <CDropdownItem style={{ cursor: 'pointer' }}>
-            <CIcon icon={cilUser} className="me-2" onClick={() => handleOpenModal()} />
+          <CDropdownItem style={{ cursor: 'pointer' }} onClick={() => handleOpenModal()}>
+            <CIcon icon={cilUser} className="me-2" />
             Thông tin
           </CDropdownItem>
           <CDropdownDivider />

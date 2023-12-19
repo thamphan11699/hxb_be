@@ -51,7 +51,7 @@ export default function CreateUser() {
         })
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
   }, [])
 
@@ -71,7 +71,7 @@ export default function CreateUser() {
           })
         })
         .catch((err) => {
-          console.log(err)
+          toast.warning(err?.response?.data?.message)
         })
     }
   }
@@ -115,8 +115,7 @@ export default function CreateUser() {
           navigate('/management/account')
         })
         .catch((err) => {
-          console.log(err)
-          toast.warn('Thêm tài khoản không thành công')
+          toast.warning(err?.response?.data?.message)
         })
     }
   }

@@ -30,7 +30,7 @@ function CreateOrEditCategoryModal({ open, closeModal, id, refreshPage }) {
           setItem(data)
         })
         .catch((err) => {
-          toast.error('Có lỗi')
+          toast.warning(err?.response?.data?.message)
         })
     }
   }, [id])
@@ -65,8 +65,7 @@ function CreateOrEditCategoryModal({ open, closeModal, id, refreshPage }) {
             setItem({ name: '', isHome: false })
           })
           .catch((err) => {
-            console.log(err)
-            toast.warn('Sửa danh mục không thành công')
+            toast.warning(err?.response?.data?.message)
           })
       } else {
         httpPostRequest('/category/create', item)
@@ -78,7 +77,7 @@ function CreateOrEditCategoryModal({ open, closeModal, id, refreshPage }) {
           })
           .catch((err) => {
             console.log(err)
-            toast.warn('Thêm danh mục không thành công')
+            toast.warning(err?.response?.data?.message)
           })
       }
     }

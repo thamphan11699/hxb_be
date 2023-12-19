@@ -17,6 +17,7 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import { httpPostRequest, logout } from '../../../axiosHeper'
 import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'react-toastify'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -62,7 +63,7 @@ const Login = () => {
           navigate('/')
         })
         .catch((err) => {
-          console.log(err)
+          toast.warning(err?.response?.data?.message)
         })
     }
   }

@@ -48,14 +48,14 @@ function EditService() {
         })
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
     httpGetRequest('/service/create')
       .then(({ data }) => {
         setCategories(data.categories)
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
   }, [id])
 
@@ -88,7 +88,7 @@ function EditService() {
           })
         })
         .catch((err) => {
-          console.log(err)
+          toast.warning(err?.response?.data?.message)
         })
     }
   }
@@ -121,8 +121,7 @@ function EditService() {
           navigate('/service')
         })
         .catch((err) => {
-          console.log(err)
-          toast.warn('Thêm dịch vụ không thành công')
+          toast.warning(err?.response?.data?.message)
         })
     }
   }

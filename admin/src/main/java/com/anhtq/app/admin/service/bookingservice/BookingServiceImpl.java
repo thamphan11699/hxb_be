@@ -115,7 +115,7 @@ public class BookingServiceImpl implements BookingService {
         request.getFirstName(),
         request.getLastName(),
         request.getPhoneNumber())) {
-      throw new ApiException("Validate error", HttpStatus.BAD_REQUEST);
+      throw new ApiException("Dữ liệu không đúng định dạng.", HttpStatus.BAD_REQUEST);
     }
 
     Long finalDiscountMoney = discountMoney;

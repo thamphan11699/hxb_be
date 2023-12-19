@@ -20,6 +20,7 @@ import React, { useEffect, useState } from 'react'
 import { httpGetRequestNoHeader } from 'src/axiosHeper'
 import { cilSearch } from '@coreui/icons'
 import ReactPaginate from 'react-paginate'
+import { toast } from 'react-toastify'
 
 function Customer() {
   const [items, setItems] = useState([])
@@ -55,7 +56,7 @@ function Customer() {
         setItems(data.items)
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
   }
 

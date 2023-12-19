@@ -73,7 +73,7 @@ function Discount() {
         setItems(data.items)
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
   }
 
@@ -85,7 +85,7 @@ function Discount() {
         handleChangeModal(false, 0)
       })
       .catch((err) => {
-        toast.warn('Xoá không thành công')
+        toast.warning(err?.response?.data?.message)
       })
   }
 

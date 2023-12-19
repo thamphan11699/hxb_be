@@ -13,6 +13,7 @@ import {
 } from '@coreui/react'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 import { httpGetRequest } from 'src/axiosHeper'
 
 function Home() {
@@ -26,7 +27,7 @@ function Home() {
         setServices(data.services)
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
   }, [])
 

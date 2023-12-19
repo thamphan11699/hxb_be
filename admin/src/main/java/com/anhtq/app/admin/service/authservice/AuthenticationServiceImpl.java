@@ -14,10 +14,9 @@ import com.anhtq.app.admin.repository.UserRepository;
 import com.anhtq.app.admin.repository.UserRoleRepository;
 import com.anhtq.app.admin.service.common.CommonService;
 import jakarta.transaction.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -59,11 +58,22 @@ public class AuthenticationServiceImpl implements AuthenticationService {
       UserEntity user =
           userRepository
               .findByEmail(request.getEmail())
-              .orElseThrow(() -> new ApiException("Authentication fail", HttpStatus.UNAUTHORIZED));
+              .orElseThrow(
+                  () ->
+                      new ApiException(
+                          "User name không tồn tại trong hệ thống.", HttpStatus.UNAUTHORIZED));
 
       Authentication authentication =
           authenticationManager.authenticate(
               new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+      if (!authentication.getAuthorities().stream()
+          .map(GrantedAuthority::getAuthority)
+          .toList()
+          .contains("ROLE_ADMIN")) {
+        throw new ApiException(
+            "Tài khoản của bạn không có quyền truy cập hệ thống.", HttpStatus.UNAUTHORIZED);
+      }
 
       String token =
           jwtService.generateToken(
@@ -88,7 +98,59 @@ public class AuthenticationServiceImpl implements AuthenticationService {
           .build();
 
     } catch (Exception e) {
-      throw new ApiException("Authentication fail", HttpStatus.UNAUTHORIZED);
+      throw new ApiException("Mật khẩu không đúng.", HttpStatus.UNAUTHORIZED);
+    }
+  }
+
+  @Override
+  public AuthenticationResponse authenticateCustomer(LogInServiceRequest request) {
+    commonService.validate(request);
+
+    try {
+      UserEntity user =
+          userRepository
+              .findByEmail(request.getEmail())
+              .orElseThrow(
+                  () ->
+                      new ApiException(
+                          "User name không tồn tại trong hệ thống.", HttpStatus.UNAUTHORIZED));
+
+      Authentication authentication =
+          authenticationManager.authenticate(
+              new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+
+      if (!authentication.getAuthorities().stream()
+          .map(GrantedAuthority::getAuthority)
+          .toList()
+          .contains("ROLE_CUSTOMER")) {
+        throw new ApiException(
+            "Tài khoản của bạn không có quyền truy cập hệ thống.", HttpStatus.UNAUTHORIZED);
+      }
+
+      String token =
+          jwtService.generateToken(
+              Map.of(),
+              org.springframework.security.core.userdetails.User.builder()
+                  .username(request.getEmail())
+                  .authorities(authentication.getAuthorities())
+                  .password(request.getPassword())
+                  .build());
+      return AuthenticationResponse.builder()
+          .token(token)
+          .user(
+              AuthenticationUserResponse.builder()
+                  .id(user.getId())
+                  .email(authentication.getName())
+                  .avatar(user.getAvatar())
+                  .roles(
+                      authentication.getAuthorities().stream()
+                          .map(GrantedAuthority::getAuthority)
+                          .toList())
+                  .build())
+          .build();
+
+    } catch (Exception e) {
+      throw new ApiException("Mật khẩu không đúng.", HttpStatus.UNAUTHORIZED);
     }
   }
 
@@ -119,6 +181,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             .status("02")
             .phoneNumber(request.getPhoneNumber())
             .avatar(request.getImage())
+            .dateOfBirth(
+                Objects.nonNull(request.getDateOfBirth())
+                    ? convertLongToLocalDateTime(request.getDateOfBirth())
+                    : null)
+            .gender(request.getGender())
             .build();
     userRepository.save(user);
 
@@ -180,5 +247,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     } catch (Exception e) {
       throw new ApiException("UnAuthorized", HttpStatus.UNAUTHORIZED);
     }
+  }
+
+  private LocalDateTime convertLongToLocalDateTime(Long time) {
+    return LocalDateTime.ofInstant(Instant.ofEpochMilli(time), TimeZone.getDefault().toZoneId());
   }
 }

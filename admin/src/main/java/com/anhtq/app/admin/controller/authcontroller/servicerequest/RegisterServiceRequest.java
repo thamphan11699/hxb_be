@@ -27,4 +27,8 @@ public class RegisterServiceRequest {
   private String image;
 
   @NotNull private List<Long> roleIds;
+
+  private Long dateOfBirth;
+
+  private String gender;
 }

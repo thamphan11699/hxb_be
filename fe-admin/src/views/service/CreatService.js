@@ -52,7 +52,7 @@ function CreatService() {
           })
         })
         .catch((err) => {
-          console.log(err)
+          toast.warning(err?.response?.data?.message)
         })
     }
   }
@@ -85,8 +85,7 @@ function CreatService() {
           navigate('/service')
         })
         .catch((err) => {
-          console.log(err)
-          toast.warn('Thêm dịch vụ không thành công')
+          toast.warning(err?.response?.data?.message)
         })
     }
   }
@@ -104,7 +103,7 @@ function CreatService() {
         })
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
   }, [])
 

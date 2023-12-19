@@ -27,7 +27,7 @@ public class CommonServiceImpl implements CommonService {
                     Collectors.mapping(ConstraintViolation::getMessage, Collectors.toList())));
 
     if (!CollectionUtils.isEmpty(result)) {
-      throw new ApiException("Validate error", HttpStatus.BAD_REQUEST);
+      throw new ApiException("Dữ liệu không đúng định dạng.", HttpStatus.BAD_REQUEST);
     }
   }
 }

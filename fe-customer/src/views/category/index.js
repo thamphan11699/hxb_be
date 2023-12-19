@@ -15,6 +15,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { httpGetRequest } from 'src/axiosHeper'
 import 'moment/locale/vi'
+import { toast } from 'react-toastify'
 
 moment().tz()
 
@@ -30,7 +31,7 @@ function Category() {
         setCount(data.count)
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
   }, [])
 
@@ -44,7 +45,7 @@ function Category() {
         setCount(data.count)
       })
       .catch((err) => {
-        console.log(err)
+        toast.warning(err?.response?.data?.message)
       })
   }
 

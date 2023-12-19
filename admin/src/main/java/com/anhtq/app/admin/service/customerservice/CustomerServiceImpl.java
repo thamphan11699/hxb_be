@@ -96,7 +96,7 @@ public class CustomerServiceImpl implements CustomerService {
     ServiceEntity entity =
         serviceRepository
             .findById(id)
-            .orElseThrow(() -> new ApiException("Service not found.", HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException("Dịch vụ không tồn tại.", HttpStatus.NOT_FOUND));
     return GetServiceDetailPageServiceResponse.builder()
         .name(entity.getName())
         .description(entity.getDescription())

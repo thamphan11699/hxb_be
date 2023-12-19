@@ -70,8 +70,7 @@ function UserInfo({ open, handleCloseModal, user }) {
           handleCloseModal()
         })
         .catch((err) => {
-          console.log(err)
-          toast.warn('Cập nhật không thành công')
+          toast.warning(err?.response?.data?.message)
         })
     }
   }
@@ -92,7 +91,7 @@ function UserInfo({ open, handleCloseModal, user }) {
           })
         })
         .catch((err) => {
-          console.log(err)
+          toast.warning(err?.response?.data?.message)
         })
     }
   }
