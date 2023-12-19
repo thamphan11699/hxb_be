@@ -163,8 +163,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         .findByEmail(request.getEmail())
         .ifPresent(
             e -> {
+              throw new ApiException("Email " + e.getEmail() + " đã tồn tại.", HttpStatus.CONFLICT);
+            });
+
+    userRepository
+        .findByPhoneNumber(request.getPhoneNumber())
+        .ifPresent(
+            e -> {
               throw new ApiException(
-                  "Email " + e.getEmail() + " already exit", HttpStatus.CONFLICT);
+                  "Số điện thoại " + e.getPhoneNumber() + " đã tồn tại", HttpStatus.CONFLICT);
             });
 
     List<RoleEntity> roles = roleRepository.findByIdIn(request.getRoleIds());
