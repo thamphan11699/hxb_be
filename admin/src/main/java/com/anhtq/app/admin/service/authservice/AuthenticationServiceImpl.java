@@ -106,52 +106,53 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   public AuthenticationResponse authenticateCustomer(LogInServiceRequest request) {
     commonService.validate(request);
 
-    try {
-      UserEntity user =
-          userRepository
-              .findByEmail(request.getEmail())
-              .orElseThrow(
-                  () ->
-                      new ApiException(
-                          "User name không tồn tại trong hệ thống.", HttpStatus.UNAUTHORIZED));
+    UserEntity user =
+        userRepository
+            .findByEmail(request.getEmail())
+            .orElseThrow(
+                () ->
+                    new ApiException(
+                        "User name không tồn tại trong hệ thống.", HttpStatus.UNAUTHORIZED));
 
-      Authentication authentication =
+    Authentication authentication = null;
+    try {
+      authentication =
           authenticationManager.authenticate(
               new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-
-      if (!authentication.getAuthorities().stream()
-          .map(GrantedAuthority::getAuthority)
-          .toList()
-          .contains("ROLE_CUSTOMER")) {
-        throw new ApiException(
-            "Tài khoản của bạn không có quyền truy cập hệ thống.", HttpStatus.UNAUTHORIZED);
-      }
-
-      String token =
-          jwtService.generateToken(
-              Map.of(),
-              org.springframework.security.core.userdetails.User.builder()
-                  .username(request.getEmail())
-                  .authorities(authentication.getAuthorities())
-                  .password(request.getPassword())
-                  .build());
-      return AuthenticationResponse.builder()
-          .token(token)
-          .user(
-              AuthenticationUserResponse.builder()
-                  .id(user.getId())
-                  .email(authentication.getName())
-                  .avatar(user.getAvatar())
-                  .roles(
-                      authentication.getAuthorities().stream()
-                          .map(GrantedAuthority::getAuthority)
-                          .toList())
-                  .build())
-          .build();
 
     } catch (Exception e) {
       throw new ApiException("Mật khẩu không đúng.", HttpStatus.UNAUTHORIZED);
     }
+
+    if (!authentication.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority)
+        .toList()
+        .contains("ROLE_CUSTOMER")) {
+      throw new ApiException(
+          "Tài khoản của bạn không có quyền truy cập hệ thống.", HttpStatus.UNAUTHORIZED);
+    }
+
+    String token =
+        jwtService.generateToken(
+            Map.of(),
+            org.springframework.security.core.userdetails.User.builder()
+                .username(request.getEmail())
+                .authorities(authentication.getAuthorities())
+                .password(request.getPassword())
+                .build());
+    return AuthenticationResponse.builder()
+        .token(token)
+        .user(
+            AuthenticationUserResponse.builder()
+                .id(user.getId())
+                .email(authentication.getName())
+                .avatar(user.getAvatar())
+                .roles(
+                    authentication.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList())
+                .build())
+        .build();
   }
 
   @Override
